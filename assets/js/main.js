@@ -8,84 +8,84 @@ $(document).ready(function () {
     // Clase Carrito
     function Carrito() {
         this.productos = [];
-    }
 
-    // Método para validar si el producto es válido
-    Carrito.prototype.esProductoValido = function (opcion) {
-        return productosValidos[opcion - 1];
-    };
+        // Validar si el producto es válido
+        this.ProductoValido = function (opcion) {
+            return productosValidos[opcion - 1];
+        };
 
-    // Método para agregar producto al carrito
-    Carrito.prototype.agregarProducto = function (opcion) {
-        var producto = this.esProductoValido(opcion);
-        if (producto) {
-            var cantidad = parseInt(prompt("Ingresa la cantidad de unidades:"));
-            if (this.cantidadEsValida(cantidad)) {
-                this.agregarMultiplesUnidades(producto, cantidad);
-                this.notificarProductoAgregado(producto, cantidad);
+        // Agregar producto al carrito
+        this.agregarProducto = function (opcion) {
+            var producto = this.ProductoValido(opcion);
+            if (producto) {
+                var cantidad = parseInt(prompt("Ingresa la cantidad de unidades:"));
+                if (this.cantidadValida(cantidad)) {
+                    this.agregarMultiplesUnidades(producto, cantidad);
+                    this.notificarProductoNuevo(producto, cantidad);
+                } else {
+                    alert("Cantidad no válida. Intenta nuevamente.");
+                }
             } else {
-                alert("Cantidad no válida. Intenta nuevamente.");
+                alert("Opción no válida. Intenta nuevamente.");
             }
-        } else {
-            alert("Opción no válida. Intenta nuevamente.");
-        }
-    };
+        };
 
-    // Para verificar si la cantidad ingresada es válida
-    Carrito.prototype.cantidadEsValida = function (cantidad) {
-        return !isNaN(cantidad) && cantidad > 0;
-    };
+        // Verificar si la cantidad ingresada es válida
+        this.cantidadValida = function (cantidad) {
+            return !isNaN(cantidad) && cantidad > 0;
+        };
 
-    // Para agregar múltiples unidades de un producto
-    Carrito.prototype.agregarMultiplesUnidades = function (producto, cantidad) {
-        for (var i = 0; i < cantidad; i++) {
-            this.productos.push(producto);
-        }
-    };
-
-    // Para notificar al usuario que el producto ha sido agregado
-    Carrito.prototype.notificarProductoAgregado = function (producto, cantidad) {
-        var mensaje = cantidad + " unidad(es) de " + producto.nombre + " agregada(s) al carrito.";
-        alert(mensaje);
-        console.log(mensaje);
-    };
-
-    // Para calcular el total de la compra
-    Carrito.prototype.calcularTotal = function () {
-        var total = 0;
-        for (var i = 0; i < this.productos.length; i++) {
-            total += this.productos[i].precio;
-        }
-        return total;
-    };
-
-    // Finalizar la compra y vaciar el carrito
-    Carrito.prototype.finalizarCompra = function () {
-        var total = this.calcularTotal();
-        this.productos = [];
-        return total;
-    };
-
-    // Mostrar detalles de la compra
-    Carrito.prototype.mostrarDetalles = function () {
-        var detalles = {};
-        for (var i = 0; i < this.productos.length; i++) {
-            var producto = this.productos[i];
-            if (!detalles[producto.nombre]) {
-                detalles[producto.nombre] = { precio: producto.precio, cantidad: 0 };
+        // Agregar múltiples unidades de un producto
+        this.agregarMultiplesUnidades = function (producto, cantidad) {
+            for (var i = 0; i < cantidad; i++) {
+                this.productos.push(producto);
             }
-            detalles[producto.nombre].cantidad += 1;
-        }
+        };
 
-        console.log("Detalles de la compra:");
-        for (var nombre in detalles) {
-            if (detalles.hasOwnProperty(nombre)) {
-                var info = detalles[nombre];
-                console.log("- " + nombre + ": $" + info.precio + " x " + info.cantidad + " = $" + (info.precio * info.cantidad));
+        // Notificar al usuario que el producto ha sido agregado
+        this.notificarProductoNuevo = function (producto, cantidad) {
+            var mensaje = cantidad + " unidad(es) de " + producto.nombre + " agregada(s) al carrito.";
+            alert(mensaje);
+            console.log(mensaje);
+        };
+
+        // Calcular el total de la compra
+        this.calcularTotal = function () {
+            var total = 0;
+            for (var i = 0; i < this.productos.length; i++) {
+                total += this.productos[i].precio;
             }
-        }
-        console.log("Total: $" + this.calcularTotal());
-    };
+            return total;
+        };
+
+        // Finalizar la compra y vaciar el carrito
+        this.finalizarCompra = function () {
+            var total = this.calcularTotal();
+            this.productos = [];
+            return total;
+        };
+
+        // Mostrar detalles de la compra
+        this.mostrarDetalles = function () {
+            var detalles = {};
+            for (var i = 0; i < this.productos.length; i++) {
+                var producto = this.productos[i];
+                if (!detalles[producto.nombre]) {
+                    detalles[producto.nombre] = { precio: producto.precio, cantidad: 0 };
+                }
+                detalles[producto.nombre].cantidad += 1;
+            }
+
+            console.log("Detalles de la compra:");
+            for (var nombre in detalles) {
+                if (detalles.hasOwnProperty(nombre)) {
+                    var info = detalles[nombre];
+                    console.log("- " + nombre + ": $" + info.precio + " x " + info.cantidad + " = $" + (info.precio * info.cantidad));
+                }
+            }
+            console.log("Total: $" + this.calcularTotal());
+        };
+    }
 
     // Productos disponibles
     var productosValidos = [
@@ -96,7 +96,7 @@ $(document).ready(function () {
         new Producto("Azúcar", 1300)
     ];
 
-
+    // Ejecución del proceso de compra
     var carrito = new Carrito();
 
     var continuar = true;
@@ -124,7 +124,7 @@ $(document).ready(function () {
                 var respuesta = prompt("¿Deseas seguir agregando productos? (s/n):").toLowerCase();
                 if (respuesta === 'n') {
                     continuar = false;
-                    // Muestra el total de la compra
+                    //Muestra el total de la compra
                     var totalCompra = carrito.calcularTotal();
                     alert("Total de la compra: $" + totalCompra + ".");
                 }
